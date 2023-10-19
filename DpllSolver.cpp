@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int main4444() {
+int main111() {
 
     // example 1
 //    vector<string> s1 = {"!M", "N", "P", "!Q"};
@@ -48,8 +48,13 @@ int main4444() {
 //    set<vector<string>> s = {s1, s2, s3, s4, s5, s6, s7, s8};
 //    vector<string> atoms = {"a", "b", "c", "d"};
 
-    map<string, int> initialAssignment;
-
-    auto *solver = new DpllSolver(s, atoms, initialAssignment);
+    auto *solver = new DpllSolver(s, atoms);
     map<string, int> valuation = solver->solve();
+    if (!valuation.empty()) {
+        cout<<"success"<<endl;
+    } else {
+        cout<<"failure"<<endl;
+    }
+
+    return 0;
 }

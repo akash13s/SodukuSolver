@@ -15,8 +15,13 @@ int main() {
 
     auto *solver = new SodukuSolver(input);
 //    solver->printClauses();
-
     map<string, int> valuation = solver->dpll();
+    if (valuation.empty()) {
+        cout<<"failure"<<endl;
+    } else {
+        cout<<"success"<<endl;
+        Helper::printMatrix(valuation);
+    }
 
     int x;
 

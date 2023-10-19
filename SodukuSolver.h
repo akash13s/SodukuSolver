@@ -21,7 +21,6 @@ class SodukuSolver {
 private:
     set<vector<string>> s;
     vector<string> atoms;
-    map<string, int> initialAssignment;
 
 private:
     void insertIntoMainSet(string x, string y) {
@@ -128,12 +127,6 @@ private:
         }
     }
 
-    void prepareInitialAssignments(vector<string> &input) {
-        for (int i=0; i<input.size(); i++) {
-            initialAssignment[input[i]] = 1;
-        }
-    }
-
     void generateCNFs(vector<string> &input) {
         generateCnfForSingleDigitInBox();
         generateCnfForUniqueRow();
@@ -168,11 +161,10 @@ public:
     SodukuSolver(vector<string> input) {
         generateAllAtoms();
         generateCNFs(input);
-        prepareInitialAssignments(input);
     }
 
     map<string, int> dpll() {
-        auto *dpllSolver = new DpllSolver(s, atoms, initialAssignment);
+        auto *dpllSolver = new DpllSolver(s, atoms);
         map<string, int> m = dpllSolver->solve();
         return m;
     }
