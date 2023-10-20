@@ -140,18 +140,7 @@ public:
         return clauses;
     }
 
-    static void printMatrix(map<string, int> &m) {
-        int matrix[9][9];
-        for (auto itr = m.begin(); itr!=m.end(); itr++) {
-            if (itr->second == 1) {
-                string cell = itr->first;
-                vector<string> props = split(cell, '_');
-                int val = props[0][1] - '0';
-                int row = props[1][1] - '0';
-                int col = props[2][1] - '0';
-                matrix[row-1][col-1] = val;
-            }
-        }
+    static void printMatrix(vector<vector<int>> &matrix) {
 
         for (int i=0; i<9; i++) {
             for (int j=0; j<9; j++) {

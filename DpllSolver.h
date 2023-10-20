@@ -19,15 +19,17 @@ using namespace std;
 
 class DpllSolver {
 public:
-    DpllSolver(set<vector<string>> s, vector<string> atoms) {
+    DpllSolver(set<vector<string>> s, vector<string> atoms, bool isVerbose) {
         this->s = s;
         this->atoms = atoms;
+        this->isVerbose = isVerbose;
     }
 
 private:
     set<vector<string>> s;
     vector<string> atoms;
     map<string, int> v;
+    bool isVerbose;
 
     map<string, int> solve(set<vector<string>> se, map<string, int> val) {
         while (1) {
@@ -48,19 +50,23 @@ private:
                     string pureLiteral = pureLiteralInSet(clauses, val);
                     if (!pureLiteral.empty()) {
                         //  encountered a pure literal
+                        if (isVerbose) {
+                            cout<<"easy case: pure literal "<<message(pureLiteral)<<endl;
+                        }
                         obviousAssignment(pureLiteral, val);
                         // delete every clause containing pure literal from S
                         vector<vector<string>> removeClauses = Helper::getClausesToBeRemoved(clauses, pureLiteral);
-                        cout<<"remove clauses containing pure literal: "<<pureLiteral<<endl;
                         Helper::deleteClausesFromSet(se, removeClauses);
                     } else {
                         string unitLiteral = unitLiteralInSet(clauses);
                         if (!unitLiteral.empty()) {
                             //  encountered a unit literal
+                            if (isVerbose) {
+                                cout<<"easy case: unit literal "<<unitLiteral<<endl;
+                            }
                             obviousAssignment(unitLiteral, val);
                             propagate(unitLiteral, se, clauses, val);
                         } else {
-                            cout<<"Exiting while loop"<<endl;
                             break;
                         }
                     }
@@ -75,17 +81,35 @@ private:
         set<vector<string>> se1(se);
         vector<vector<string>> clauses1 = Helper::getClauses(se1);
         propagate(atom, se1, clauses1, val);
+        if (isVerbose) {
+            cout<<"hard case: guess "<<atom<<"=true"<<endl;
+        }
         map<string, int> vnew = solve(se1, val);
 
         if (!vnew.empty()) {
             return vnew;
         }
 
+        cout<<"contradiction: backtrack guess "<<atom<<"=false"<<endl;
+
         val[atom] = 0;
         set<vector<string>> se2(se);
         vector<vector<string>> clauses2 = Helper::getClauses(se2);
         propagate(Helper::negation(atom), se2, clauses2, val);
+        if (isVerbose) {
+            cout<<"hard case: guess "<<atom<<"=false"<<endl;
+        }
         return solve(se2, val);
+    }
+
+    string message(string literal) {
+        string msg;
+        if (literal[0] == '!') {
+            msg = literal.substr(1, literal.length() - 1) + "=false";
+        } else {
+            msg = literal + "=true";
+        }
+        return msg;
     }
 
     string getUnboundAtom(map<string, int> &val) {

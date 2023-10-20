@@ -48,7 +48,7 @@ int main111() {
 //    set<vector<string>> s = {s1, s2, s3, s4, s5, s6, s7, s8};
 //    vector<string> atoms = {"a", "b", "c", "d"};
 
-    auto *solver = new DpllSolver(s, atoms);
+    auto *solver = new DpllSolver(s, atoms, true);
     map<string, int> valuation = solver->solve();
     if (!valuation.empty()) {
         cout<<"success"<<endl;

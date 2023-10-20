@@ -21,6 +21,8 @@ class SodukuSolver {
 private:
     set<vector<string>> s;
     vector<string> atoms;
+    map<string, int> assignments;
+    bool isVerbose;
 
 private:
     void insertIntoMainSet(string x, string y) {
@@ -148,25 +150,89 @@ private:
     }
 
 public:
-    void printClauses() {
+    void writeCnfClausesToFile(string cnfFile) {
+        ofstream outputFile;
+        outputFile.open(cnfFile);
+
+        if (!outputFile.is_open()) {
+            cerr << "Error creating the CNF file." << endl;
+        }
+
         for (auto itr=s.begin(); itr!=s.end(); itr++) {
             vector<string> vv = *itr;
             for (int i=0; i<vv.size(); i++) {
-                cout<<vv[i]<<" ";
+                outputFile<<vv[i]<<" ";
             }
-            cout<<endl;
+            outputFile<<endl;
         }
+
+        outputFile.close();
     }
 
-    SodukuSolver(vector<string> input) {
+    void writeDpllAssignmentsToFile(string dpllFile) {
+        ofstream outputFile;
+        outputFile.open(dpllFile);
+
+        if (!outputFile.is_open()) {
+            cerr << "Error creating the DPLL assignments file." << endl;
+        }
+
+        if (!assignments.empty()) {
+            for (auto itr = assignments.begin(); itr!=assignments.end(); itr++) {
+                string literal = itr->first;
+                string assignment = (itr->second == 1)? "true": "false";
+                outputFile<<literal<<" = "<<assignment<<endl;
+            }
+        }
+
+        outputFile.close();
+    }
+
+    void writeSolvedPuzzleToFile(string &solvedPuzzleFile, vector<vector<int>> &matrix) {
+        ofstream outputFile;
+        outputFile.open(solvedPuzzleFile);
+
+        if (!outputFile.is_open()) {
+            cerr << "Error creating the DPLL assignments file." << endl;
+        }
+
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                outputFile<<matrix[i][j]<<"  ";
+            }
+            outputFile<<endl;
+        }
+
+        outputFile.close();
+    }
+
+    vector<vector<int>> getSolvedPuzzle() {
+        vector<vector<int>> matrix(9, vector<int>(9, 0));
+
+        for (auto itr = assignments.begin(); itr!=assignments.end(); itr++) {
+            if (itr->second == 1) {
+                string cell = itr->first;
+                vector<string> props = Helper::split(cell, '_');
+                int val = props[0][1] - '0';
+                int row = props[1][1] - '0';
+                int col = props[2][1] - '0';
+                matrix[row-1][col-1] = val;
+            }
+        }
+
+        return matrix;
+    }
+
+    SodukuSolver(vector<string> input, bool isVerbose) {
         generateAllAtoms();
         generateCNFs(input);
+        this->isVerbose = isVerbose;
     }
 
     map<string, int> dpll() {
-        auto *dpllSolver = new DpllSolver(s, atoms);
-        map<string, int> m = dpllSolver->solve();
-        return m;
+        auto *dpllSolver = new DpllSolver(s, atoms, isVerbose);
+        assignments = dpllSolver->solve();
+        return assignments;
     }
 
 };
