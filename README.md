@@ -9,12 +9,12 @@ Run commands: (different examples)
 1. Run without verbose mode
 ./a.out -d <directory-where-input-file-present>
 eg:
-./a.out -d /home/as18464/soduku/
+./a.out -d /home/as18464/Soduku/
 
 2. Run in verbose mode
 ./a.out -v -d <directory-where-input-file-present>
 eg:
-./a.out -v -d /home/as18464/soduku/
+./a.out -v -d /home/as18464/Soduku/
 
 NOTE: 
 a. By default, the SodukuSolver looks for an input.txt file in the directory specified in the above commands

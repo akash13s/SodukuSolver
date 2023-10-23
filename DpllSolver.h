@@ -90,7 +90,9 @@ private:
             return vnew;
         }
 
-        cout<<"contradiction: backtrack guess "<<atom<<"=false"<<endl;
+        if (isVerbose) {
+            cout<<"contradiction: backtrack guess "<<atom<<"=false"<<endl;
+        }
 
         val[atom] = 0;
         set<vector<string>> se2(se);
