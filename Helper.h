@@ -53,7 +53,7 @@ public:
         vector<string> atoms;
 
         while (getline(file, line)) {
-            removeLeadingWhitespace(line);
+            removeLeadingAndTrailingWhitespace(line);
 
             if (line.empty()) {
                 continue;
@@ -83,8 +83,11 @@ public:
         return s;
     }
 
-    static void removeLeadingWhitespace(string &input) {
+    static void removeLeadingAndTrailingWhitespace(string &input) {
         input.erase(input.begin(), input.begin() + input.find_first_not_of(" \t"));
+        input.erase(std::find_if(input.rbegin(), input.rend(), [](int ch) {
+            return !std::isspace(ch);
+        }).base(), input.end());
     }
 
     static vector<string> split(string input, char del) {
@@ -94,7 +97,7 @@ public:
 
         while (!ss.eof()) {
             getline(ss, token, del);
-            removeLeadingWhitespace(token);
+            removeLeadingAndTrailingWhitespace(token);
             tokens.push_back(token);
         }
 
