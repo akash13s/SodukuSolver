@@ -4,6 +4,7 @@
 
 #include "SodukuSolver.h"
 #include <iostream>
+#include "chrono"
 
 using namespace std;
 
@@ -54,11 +55,18 @@ int main(int argc, char *argv[]) {
     auto *solver = new SodukuSolver(input, isVerbose);
     solver->writeCnfClausesToFile(cnfFile);
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     map<string, int> valuation = solver->dpll();
+
+    auto end = std::chrono::high_resolution_clock::now();
+
     if (valuation.empty()) {
         cout<<"No valid assignment found"<<endl;
     }
     cout<<"Success: valid assignments found"<<endl;
+    std::chrono::duration<double> duration = end - start;
+    cout<<"Time taken(in seconds): "<<duration.count()<<endl;
 
     solver->writeDpllAssignmentsToFile(dpllFile);
     vector<vector<int>> solvedMatrix = solver->getSolvedPuzzle();

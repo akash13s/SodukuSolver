@@ -123,6 +123,68 @@ private:
         return "";
     }
 
+    string getUnboundAtomV2(map<string, int> &val) {
+        vector< pair<int, string> > vec;
+
+        for (auto itr = val.begin(); itr!=val.end(); itr++) {
+            if (itr->second == -1) {
+                int i, j;
+                string atom = itr->first;
+                int v = atom[1];
+                int row = atom[4];
+                int col = atom[7];
+
+                int count = 0;
+                unordered_map<string, int> mark;
+
+                // check for same row
+                for (i=1; i<=9; i++) {
+                    if (i!=col) {
+                        string atom2 = Helper::getAtomForSquare(row, i, v, false);
+                        if (val[atom2] == 1 && mark[atom2]==0) {
+                            count++;
+                            mark[atom2] = 1;
+                        }
+                    }
+                }
+
+                // check for same column
+                for (i=1; i<=9; i++) {
+                    if (i!=row) {
+                        string atom2 = Helper::getAtomForSquare(i, col, v, false);
+                        if (val[atom2] == 1 && mark[atom2]==0) {
+                            count++;
+                            mark[atom2] = 1;
+                        }
+                    }
+                }
+
+                // check for same 3*3 subgrid
+                int ri = 3*((row-1)/3) + 1;
+                int ci = 3*((col-1)/3) + 1;
+                for (i=ri; i<ri+3; i++) {
+                    for (j=ci; j<ci+3; j++) {
+                        if (i==row and j==col) {
+                            continue;
+                        }
+                        string atom2 = Helper::getAtomForSquare(i, j, v, false);
+                        if (val[atom2] == 1 && mark[atom2] == 0) {
+                            count++;
+                        }
+                    }
+                }
+
+                vec.push_back({count, atom});
+
+            }
+        }
+
+        sort(vec.begin(), vec.end());
+        reverse(vec.begin(), vec.end());
+
+        return vec[0].second;
+    }
+
     bool emptyClauseInSet(vector<vector<string>> &clauses) {
         for (int i=0; i<clauses.size(); i++) {
             if (clauses[i].empty()) {
