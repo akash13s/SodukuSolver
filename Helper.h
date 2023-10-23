@@ -84,10 +84,12 @@ public:
     }
 
     static void removeLeadingAndTrailingWhitespace(string &input) {
-        input.erase(input.begin(), input.begin() + input.find_first_not_of(" \t"));
-        input.erase(std::find_if(input.rbegin(), input.rend(), [](int ch) {
-            return !std::isspace(ch);
-        }).base(), input.end());
+        if (!input.empty()) {
+            input.erase(input.begin(), input.begin() + input.find_first_not_of(" \t"));
+            input.erase(std::find_if(input.rbegin(), input.rend(), [](int ch) {
+                return !std::isspace(ch);
+            }).base(), input.end());
+        }
     }
 
     static vector<string> split(string input, char del) {
