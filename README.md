@@ -19,6 +19,7 @@ eg:
 NOTE: 
 a. By default, the SodukuSolver looks for an input.txt file in the directory specified in the above commands
 b. Please update the contents of input.txt file before every test run
+c. In verbose mode, the program outputs each step of the DPLL algorithm
 ```
 
 After every successful run, the following files are created in the directory specified in commands 1/2:
