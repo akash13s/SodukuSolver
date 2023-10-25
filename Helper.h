@@ -46,7 +46,7 @@ public:
         return s;
     }
 
-    static vector<string> parseInputFile(string inputFile) {
+    static vector<string> parseInputFile(string inputFile, bool &correctInputFormat) {
         ifstream file(inputFile);
         string line;
 
@@ -63,6 +63,11 @@ public:
 
             for (int i=0; i<v.size(); i++) {
                 vector<string> w = split(v[i], '=');
+                if (w[0].length() > 2 || w[1].length() > 1) {
+                    cout<<"Error in input file: "<<w[0]<<"="<<w[1]<<endl;
+                    correctInputFormat = false;
+                    break;
+                }
                 int row = w[0][0] - '0';
                 int col = w[0][1] - '0';
                 int val = w[1][0] - '0';

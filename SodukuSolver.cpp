@@ -50,7 +50,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    vector<string> input = Helper::parseInputFile(inputFile);
+    bool correctInputFormat = true;
+
+    vector<string> input = Helper::parseInputFile(inputFile, correctInputFormat);
+    if (!correctInputFormat) {
+        cout<<"Error: Incorrect input format"<<endl;
+        return 1;
+    }
 
     auto *solver = new SodukuSolver(input, isVerbose);
     solver->writeCnfClausesToFile(cnfFile);
